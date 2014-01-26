@@ -28,8 +28,6 @@ void i2cInit ()//I2Cobj* obj, I2C_TypeDef* i2c, GPIO_TypeDef* port, int pin)
 		_delay_us(10);
 	}
 
-	// _delay_ms (100);
-
 	IO_ALT_OPEN_DRAIN(SCL);
 	IO_ALT_OPEN_DRAIN(SDA);
 
