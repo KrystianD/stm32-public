@@ -4,6 +4,7 @@
 #include <stdint.h>
 #include <stdio.h>
 #include <string.h>
+#include <math.h>
 
 // common
 
@@ -30,7 +31,7 @@ void _errorloop () __attribute__ ((noreturn));
 #define USART_BRR_FCPU(fcpu,x) (((fcpu/(16*(x))) << 4) | \
 	(int)((((float)fcpu/(float)(16*(x))) - (int)((float)fcpu/(float)(16*(x)))) * 16.0f + 0.5f))
 
-#define M_PI 3.141592f
+// #define M_PI 3.141592f
 #define M_SQ2_2 0.70710678f
 
 static float d2r (float v) { return v * M_PI / 180.0f; }
@@ -60,7 +61,7 @@ static void st_delay_ms (uint32_t ms)
 #define AF15 15
 
 // specific
-#if defined(STM32F10X_MD_VL) || defined(STM32F10X_MD)
+#if defined(STM32F10X_MD_VL) || defined(STM32F10X_MD) || defined(STM32F10X_LD)
 #include <public_f1.h>
 #elif defined(STM32L1XX_MD)
 #include <public_l1.h>

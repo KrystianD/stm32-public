@@ -20,9 +20,9 @@ void i2cSetNACK ();
 void i2cSetStop ();
 uint8_t i2cWaitUntilStop ();
 
-uint8_t i2cWriteData (uint8_t addr, uint8_t reg, uint8_t *buffer, uint8_t cnt);
+uint8_t i2cWriteData (uint8_t addr, uint8_t reg, const uint8_t *buffer, uint8_t cnt);
 uint8_t i2cReadData (uint8_t addr, uint8_t reg, uint8_t *buffer, uint8_t cnt);
-uint8_t i2cWriteDataNoReg (uint8_t addr, uint8_t *buffer, uint8_t cnt);
+uint8_t i2cWriteDataNoReg (uint8_t addr, const uint8_t *buffer, uint8_t cnt);
 uint8_t i2cReadDataNoReg (uint8_t addr, uint8_t *buffer, uint8_t cnt);
 
 #endif

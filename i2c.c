@@ -171,7 +171,7 @@ inline uint8_t i2cWaitUntilStop ()
 	while ((I2C_OBJ->SR2 & I2C_SR2_MSL)) I2CD("u1");
 }
 
-uint8_t i2cWriteData (uint8_t addr, uint8_t reg, uint8_t *buffer, uint8_t cnt)
+uint8_t i2cWriteData (uint8_t addr, uint8_t reg, const uint8_t *buffer, uint8_t cnt)
 {
 	if (i2cStart (addr | 0)) return I2C_ERROR;
 	i2cSetACK ();
@@ -223,7 +223,7 @@ uint8_t i2cReadData (uint8_t addr, uint8_t reg, uint8_t *buffer, uint8_t cnt)
 		}
 	}
 }
-uint8_t i2cWriteDataNoReg (uint8_t addr, uint8_t *buffer, uint8_t cnt)
+uint8_t i2cWriteDataNoReg (uint8_t addr, const uint8_t *buffer, uint8_t cnt)
 {
 	if (i2cStart (addr | 0)) return I2C_ERROR;
 	i2cSetACK ();
