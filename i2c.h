@@ -8,7 +8,8 @@
 #define I2C_ERROR_START 2
 #define I2C_ERROR_ADDR  3
 
-void i2cInit(I2C_TypeDef* I2C_OBJ);
+void i2cInit100kHz(I2C_TypeDef* I2C_OBJ);
+void i2cInit200kHz(I2C_TypeDef* I2C_OBJ);
 void i2cDeinit(I2C_TypeDef* I2C_OBJ);
   
 uint8_t i2cStart(I2C_TypeDef* I2C_OBJ, uint8_t addr);
