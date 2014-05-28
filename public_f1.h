@@ -84,6 +84,14 @@ static inline uint8_t IO_IS_LOW (GPIO_TypeDef* port, int pin)
 	// return *addr == 0 ? 1 : 0;
 }
 
+#define EXTI_PORTA 0b0000
+#define EXTI_PORTB 0b0001
+#define EXTI_PORTC 0b0010
+#define EXTI_PORTD 0b0011
+#define EXTI_PORTE 0b0100
+#define EXTI_PORTF 0b0101
+#define EXTI_PORTG 0b0110
+
 #define SET_EXTICR(irq,port) { \
 	AFIO->EXTICR[(irq) / 4] &= ~(0b1111 << (((irq) % 4) * 4)); \
 	AFIO->EXTICR[(irq) / 4] |= (port) << (((irq) % 4) * 4); }

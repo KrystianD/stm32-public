@@ -13,7 +13,7 @@ void i2cInit100kHz(I2C_TypeDef* I2C_OBJ)
 	I2C_OBJ->TRISE = (PCLK1_FREQ / 1000000) + 1;
 	I2C_OBJ->CR1 |= I2C_CR1_PE;
 
-	myprintf("cr2 0x%02x\r\nccr = 0x%02x\r\ntrise = 0x%02x\r\n", I2C_OBJ->CR2, I2C_OBJ->CCR, I2C_OBJ->TRISE);
+	// myprintf("cr2 0x%02x\r\nccr = 0x%02x\r\ntrise = 0x%02x\r\n", I2C_OBJ->CR2, I2C_OBJ->CCR, I2C_OBJ->TRISE);
 }
 void i2cInit200kHz(I2C_TypeDef* I2C_OBJ)
 {
@@ -23,7 +23,7 @@ void i2cInit200kHz(I2C_TypeDef* I2C_OBJ)
 	I2C_OBJ->TRISE = (PCLK1_FREQ / 1000000) + 1;
 	I2C_OBJ->CR1 |= I2C_CR1_PE;
 
-	myprintf("cr2 0x%02x\r\nccr = 0x%02x\r\ntrise = 0x%02x\r\n", I2C_OBJ->CR2, I2C_OBJ->CCR, I2C_OBJ->TRISE);
+	// myprintf("cr2 0x%02x\r\nccr = 0x%02x\r\ntrise = 0x%02x\r\n", I2C_OBJ->CR2, I2C_OBJ->CCR, I2C_OBJ->TRISE);
 }
 void i2cDeinit(I2C_TypeDef* I2C_OBJ)
 {

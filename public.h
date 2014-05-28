@@ -34,8 +34,10 @@ void _errorloop () __attribute__ ((noreturn));
 // #define M_PI 3.141592f
 #define M_SQ2_2 0.70710678f
 
-static float d2r (float v) { return v * M_PI / 180.0f; }
-static float r2d (float v) { return v * 180.0f / M_PI; }
+#define DEG2RAD (M_PI / 180.0f)
+#define RAD2DEG (180.0f / M_PI)
+static inline float d2r (float v) { return v * (M_PI / 180.0f); }
+static inline float r2d (float v) { return v * (180.0f / M_PI); }
 
 static void st_delay_ms (uint32_t ms)
 {
