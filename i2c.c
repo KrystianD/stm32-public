@@ -12,7 +12,7 @@ void i2cInit100kHz(I2C_TypeDef* I2C_OBJ)
 	I2C_OBJ->CCR = 40 * (PCLK1_FREQ / 8000000);
 	I2C_OBJ->TRISE = (PCLK1_FREQ / 1000000) + 1;
 	I2C_OBJ->CR1 |= I2C_CR1_PE;
-
+	
 	// myprintf("cr2 0x%02x\r\nccr = 0x%02x\r\ntrise = 0x%02x\r\n", I2C_OBJ->CR2, I2C_OBJ->CCR, I2C_OBJ->TRISE);
 }
 void i2cInit200kHz(I2C_TypeDef* I2C_OBJ)
@@ -22,7 +22,7 @@ void i2cInit200kHz(I2C_TypeDef* I2C_OBJ)
 	I2C_OBJ->CCR = 40 * (PCLK1_FREQ / 8000000 / 2);
 	I2C_OBJ->TRISE = (PCLK1_FREQ / 1000000) + 1;
 	I2C_OBJ->CR1 |= I2C_CR1_PE;
-
+	
 	// myprintf("cr2 0x%02x\r\nccr = 0x%02x\r\ntrise = 0x%02x\r\n", I2C_OBJ->CR2, I2C_OBJ->CCR, I2C_OBJ->TRISE);
 }
 void i2cDeinit(I2C_TypeDef* I2C_OBJ)
@@ -55,23 +55,43 @@ uint8_t i2cStart(I2C_TypeDef* I2C_OBJ, uint8_t addr)
 {
 	I2C_OBJ->CR1 |= I2C_CR1_START;
 	uint16_t timeout = 10000;
-	while (!(I2C_OBJ->SR1 & I2C_SR1_SB))
+	for (;;)
 	{
 		I2CD("s1");
+		if (I2C_OBJ->SR1 & I2C_SR1_SB)
+		{
+			volatile uint8_t s2 = I2C_OBJ->SR2;
+			break;
+		}
 		if (timeout-- == 0)
 			return I2C_ERROR_START;
 	}
 	
 	I2C_OBJ->DR = addr;
 	timeout = 10000;
-	while (!(I2C_OBJ->SR1 & I2C_SR1_ADDR))
+	for (;;)
 	{
 		I2CD("s2");
+		if (I2C_OBJ->SR1 & I2C_SR1_ADDR)
+		{
+			volatile uint8_t s2 = I2C_OBJ->SR2;
+			return I2C_SUCCESS;
+		}
+		if (I2C_OBJ->SR1 & I2C_SR1_AF)
+		{
+			I2C_OBJ->SR1 &= ~I2C_SR1_AF;
+			i2cSetStop(I2C_OBJ);
+			i2cWaitUntilStop(I2C_OBJ);
+			return I2C_SLAVE_NOT_FOUND;
+		}
+		if (I2C_OBJ->SR1 & I2C_SR1_BERR)
+		{
+			return I2C_ERROR_ADDR;
+		}
 		if (timeout-- == 0)
 			return I2C_ERROR_ADDR;
 	}
-	volatile uint8_t q = I2C_OBJ->SR2;
-	return I2C_SUCCESS;
+	return I2C_ERROR_ADDR;
 }
 uint8_t i2cWrite(I2C_TypeDef* I2C_OBJ, uint8_t data)
 {

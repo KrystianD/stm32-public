@@ -3,10 +3,11 @@
 
 #include <public.h>
 
-#define I2C_SUCCESS     0
-#define I2C_ERROR       1
-#define I2C_ERROR_START 2
-#define I2C_ERROR_ADDR  3
+#define I2C_SUCCESS         0
+#define I2C_ERROR           1
+#define I2C_ERROR_START     2
+#define I2C_ERROR_ADDR      3
+#define I2C_SLAVE_NOT_FOUND 4
 
 void i2cInit100kHz(I2C_TypeDef* I2C_OBJ);
 void i2cInit200kHz(I2C_TypeDef* I2C_OBJ);
