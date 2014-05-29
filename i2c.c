@@ -53,50 +53,45 @@ void i2cDeinit(I2C_TypeDef* I2C_OBJ)
 
 uint8_t i2cStart(I2C_TypeDef* I2C_OBJ, uint8_t addr)
 {
-	uint32_t t;
-	
 	I2C_OBJ->CR1 |= I2C_CR1_START;
-	t = ticks;
+	uint16_t timeout = 10000;
 	while (!(I2C_OBJ->SR1 & I2C_SR1_SB))
 	{
 		I2CD("s1");
-		if (ticks - t > 10)
-		{
-			// myprintf("%02x %02x %02x\r\n", I2C_OBJ->CR1, I2C_OBJ->SR1, I2C_OBJ->SR2);
+		if (timeout-- == 0)
 			return I2C_ERROR_START;
-		}
 	}
 	
 	I2C_OBJ->DR = addr;
-	t = ticks;
+	timeout = 10000;
 	while (!(I2C_OBJ->SR1 & I2C_SR1_ADDR))
 	{
 		I2CD("s2");
-		if (ticks - t > 10)
+		if (timeout-- == 0)
 			return I2C_ERROR_ADDR;
 	}
-	uint8_t q = I2C_OBJ->SR2;
+	volatile uint8_t q = I2C_OBJ->SR2;
 	return I2C_SUCCESS;
 }
 uint8_t i2cWrite(I2C_TypeDef* I2C_OBJ, uint8_t data)
 {
 	I2C_OBJ->DR = data;
-	uint32_t t = ticks;
+	uint16_t timeout = 10000;
 	while (!(I2C_OBJ->SR1 & I2C_SR1_TXE))
 	{
 		I2CD("w1");
-		if (ticks - t > 10)
+		if (timeout-- == 0)
 			return I2C_ERROR;
 	}
 	return I2C_SUCCESS;
 }
 uint8_t i2cRead(I2C_TypeDef* I2C_OBJ, uint8_t* data)
 {
-	uint32_t t = ticks;
+	uint16_t timeout = 10000;
 	while (!(I2C_OBJ->SR1 & I2C_SR1_RXNE))
 	{
 		I2CD("r1");
-		if (ticks - t > 10)
+		if (timeout-- == 0)
 			return I2C_ERROR;
 	}
 	*data = I2C_OBJ->DR;
@@ -116,11 +111,11 @@ inline void i2cSetStop(I2C_TypeDef* I2C_OBJ)
 }
 inline uint8_t i2cWaitUntilStop(I2C_TypeDef* I2C_OBJ)
 {
-	uint32_t t = ticks;
+	uint16_t timeout = 10000;
 	while ((I2C_OBJ->SR2 & I2C_SR2_MSL))
 	{
 		I2CD("u1");
-		if (ticks - t > 10)
+		if (timeout-- == 0)
 			return I2C_ERROR;
 	}
 	return I2C_SUCCESS;
