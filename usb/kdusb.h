@@ -23,8 +23,13 @@ uint8_t usbEP;
 extern uint8_t *usbData;
 extern USB_Request usbRequest;
 
+extern void _errorloop ();
+
 void usbHandleLP ();
 
+void usbInit ();
+void usbDisconnect ();
+void usbConnect ();
 uint16_t usbFunctionSetup ();
 uint8_t usbPrepareUserData (uint16_t max);
 void usbHandleData (uint8_t size);
