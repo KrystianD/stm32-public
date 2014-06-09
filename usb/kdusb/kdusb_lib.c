@@ -487,6 +487,14 @@ void USB_prepareData()
 	}
 }
 
+// Interrupt handling
+void usbSetInterruptData(uint8_t ep, uint8_t* data, uint8_t len)
+{
+	USB_setEPTxCount(ep, len);
+	USB_userspace2PMA(USB_getEPTxAddr(ep), data, len);
+	USB_set_STAT_TX(ep, USB_EP_VALID);
+}
+
 // Consts
 const char USB_String0Descriptor[] =   /* language descriptor */
 {

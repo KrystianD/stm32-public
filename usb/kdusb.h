@@ -33,5 +33,6 @@ void usbConnect();
 uint16_t usbFunctionSetup();
 uint8_t usbPrepareUserData(uint16_t max);
 void usbHandleData(uint8_t size);
+void usbSetInterruptData(uint8_t ep, uint8_t* data, uint8_t len);
 
 #endif

@@ -206,12 +206,4 @@ void USB_send0LengthFrame()
 	USB_set_STAT_TX(0, USB_EP_VALID);
 }
 
-// Interrupt handling
-void usbSetInterruptData(uint8_t ep, uint8_t* data, uint8_t len)
-{
-	USB_setEPTxCount(ep, len);
-	USB_userspace2PMA(USB_getEPTxAddr(ep), data, len);
-	USB_set_STAT_TX(ep, USB_EP_VALID);
-}
-
 #endif
