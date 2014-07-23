@@ -142,18 +142,30 @@ static int printff(char **out, double val, int width, int pad)
 		pc++;
 		val = -val;
 	}
-	else
+	else if (pad == PAD_RIGHT)
 	{
 		printchar(out, ' ');
 		pc++;
 	}
+	
+	int mult = 1000000;
+	int multSize = 6;
+	if (width)
+	{
+		int tmp = width;
+		mult = 10;
+		while (--tmp)
+			mult *= 10;
+		multSize = width;
+	}
+	
 	int32_t d = val;
-	int32_t f = (int32_t)((val - d) * 1000000);
+	int32_t f = (int32_t)((val - d) * mult);
 	
 	pc = printi(out, d, 10, 0, 0, 0, 'a');
 	printchar(out, '.');
 	pc++;
-	pc += printi(out, f, 10, 0, 6, PAD_ZERO, 'a');
+	pc += printi(out, f, 10, 0, multSize, PAD_ZERO, 'a');
 	
 	return pc;
 }
