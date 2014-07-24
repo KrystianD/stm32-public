@@ -45,10 +45,10 @@ void i2cDeinit(I2C_TypeDef* I2C_OBJ)
 	// IO_HIGH(SDA);
 }
 
-// #define I2CD(x) myprintf(x"\r\n");
+// #define I2CD(x,...) myprintf(x"\r\n", ##__VA_ARGS__);
 
 #ifndef I2CD
-#define I2CD(x)
+#define I2CD(x,...)
 #endif
 
 uint8_t i2cStart(I2C_TypeDef* I2C_OBJ, uint8_t addr)
@@ -71,20 +71,21 @@ uint8_t i2cStart(I2C_TypeDef* I2C_OBJ, uint8_t addr)
 	timeout = 10000;
 	for (;;)
 	{
-		I2CD("s2");
-		if (I2C_OBJ->SR1 & I2C_SR1_ADDR)
+		volatile uint16_t s1 = I2C_OBJ->SR1;
+		volatile uint16_t s2 = I2C_OBJ->SR2;
+		I2CD("s2 SR1 0x%04x SR2 0x%04x", s1, s2);
+		if (s1 & I2C_SR1_ADDR)
 		{
-			volatile uint8_t s2 = I2C_OBJ->SR2;
 			return I2C_SUCCESS;
 		}
-		if (I2C_OBJ->SR1 & I2C_SR1_AF)
+		if (s1 & I2C_SR1_AF)
 		{
 			I2C_OBJ->SR1 &= ~I2C_SR1_AF;
 			i2cSetStop(I2C_OBJ);
 			i2cWaitUntilStop(I2C_OBJ);
 			return I2C_SLAVE_NOT_FOUND;
 		}
-		if (I2C_OBJ->SR1 & I2C_SR1_BERR)
+		if (s1 & I2C_SR1_BERR)
 		{
 			return I2C_ERROR_ADDR;
 		}
@@ -115,6 +116,7 @@ uint8_t i2cRead(I2C_TypeDef* I2C_OBJ, uint8_t* data)
 			return I2C_ERROR;
 	}
 	*data = I2C_OBJ->DR;
+	I2CD("r 0x%02x", *data);
 	return I2C_SUCCESS;
 }
 inline void i2cSetACK(I2C_TypeDef* I2C_OBJ)
@@ -134,7 +136,9 @@ inline uint8_t i2cWaitUntilStop(I2C_TypeDef* I2C_OBJ)
 	uint16_t timeout = 10000;
 	while ((I2C_OBJ->SR2 & I2C_SR2_MSL))
 	{
-		I2CD("u1");
+		volatile uint16_t s1 = I2C_OBJ->SR1;
+		volatile uint16_t s2 = I2C_OBJ->SR2;
+		I2CD("u1 CR1 0x%02x SR1 0x%04x SR2 0x%04x", I2C_OBJ->CR1, s1, s2);
 		if (timeout-- == 0)
 			return I2C_ERROR;
 	}

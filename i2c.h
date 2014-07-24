@@ -12,9 +12,8 @@
 void i2cInit100kHz(I2C_TypeDef* I2C_OBJ);
 void i2cInit200kHz(I2C_TypeDef* I2C_OBJ);
 void i2cDeinit(I2C_TypeDef* I2C_OBJ);
-  
+
 uint8_t i2cStart(I2C_TypeDef* I2C_OBJ, uint8_t addr);
-// uint8_t i2cStop ();
 uint8_t i2cWrite(I2C_TypeDef* I2C_OBJ, uint8_t data);
 uint8_t i2cRead(I2C_TypeDef* I2C_OBJ, uint8_t* data);
 void i2cSetACK(I2C_TypeDef* I2C_OBJ);
