@@ -158,9 +158,15 @@ static int printff(char **out, double val, int width, int pad)
 			mult *= 10;
 		multSize = width;
 	}
+	mult *= 10;
 	
 	int32_t d = val;
 	int32_t f = (int32_t)((val - d) * mult);
+
+	if (f % 10 >= 5)
+		f = f / 10 + 1;
+	else
+		f = f / 10;
 	
 	pc = printi(out, d, 10, 0, 0, 0, 'a');
 	printchar(out, '.');
