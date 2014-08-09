@@ -1,43 +1,36 @@
 /*
 	Copyright 2001, 2002 Georges Menie (www.menie.org)
 	stdarg version contributed by Christian Ettinger
+	float format by Krystian Dużyński 2014
 
-    This program is free software; you can redistribute it and/or modify
-    it under the terms of the GNU Lesser General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or
-    (at your option) any later version.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU Lesser General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
 
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU Lesser General Public License for more details.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU Lesser General Public License for more details.
 
-    You should have received a copy of the GNU Lesser General Public License
-    along with this program; if not, write to the Free Software
-    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*/
-
-/*
-	putchar is the only external dependency for this file,
-	if you have a working putchar, leave it commented out.
-	If not, uncomment the define below and
-	replace outbyte(c) by your own function call.
-
+	You should have received a copy of the GNU Lesser General Public License
+	along with this program; if not, write to the Free Software
+	Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
 #include <stdarg.h>
 #include <stdint.h>
 
+#include "myprintf.h"
+
 static void printchar(char **str, int c)
 {
-	extern int myputchar(int c);
-	
 	if (str)
 	{
 		**str = c;
 		++(*str);
 	}
-	else (void)myputchar(c);
+	else myputchar(c);
 }
 
 #define PAD_RIGHT 1
@@ -166,21 +159,18 @@ static int printff(char **out, double val, int width, int pad)
 	if (f % 10 >= 5)
 	{
 		f = f / 10;
-		if (f == 9)
+		f += 1;
+		if (f == mult / 10)
 		{
 			f = 0;
 			d += 1;
-		}
-		else
-		{
-			f += 1;
 		}
 	}
 	else
 	{
 		f = f / 10;
 	}
-		
+	
 	pc = printi(out, d, 10, 0, 0, 0, 'a');
 	printchar(out, '.');
 	pc++;
