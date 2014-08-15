@@ -3,10 +3,10 @@
 
 #include "stm32f4xx.h"
 
-#define BITBAND_SYSTEM(addr,bit) (uint32_t*)(0x42000000 + ((uint32_t)(addr) - 0x40000000) * 32 + (bit) * 4)
+#define BITBAND_SYSTEM(addr,bit) (volatile uint32_t*)(0x42000000 + ((uint32_t)(addr) - 0x40000000) * 32 + (bit) * 4)
 
 // IO
-#define PORTCR_FROM_PORTPIN(port,pin) *(uint32_t*)((uint32_t)port + 0x04 * (pin / 8))
+#define PORTCR_FROM_PORTPIN(port,pin) *(volatile uint32_t*)((uint32_t)port + 0x04 * (pin / 8))
 
 #define IO_SPEED_400kHZ 0b00
 #define IO_SPEED_2MHZ   0b01
