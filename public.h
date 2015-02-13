@@ -31,7 +31,9 @@ void _errorloop () __attribute__ ((noreturn));
 #define USART_BRR_FCPU(fcpu,x) (((fcpu/(16*(x))) << 4) | \
 	(int)((((float)fcpu/(float)(16*(x))) - (int)((float)fcpu/(float)(16*(x)))) * 16.0f + 0.5f))
 
-// #define M_PI 3.141592f
+#ifndef M_PI
+#define M_PI 3.14159265358979323846
+#endif
 #define M_SQ2_2 0.70710678f
 
 #define DEG2RAD (M_PI / 180.0f)
