@@ -65,7 +65,7 @@ static void st_delay_ms (uint32_t ms)
 #define AF15 15
 
 // specific
-#if defined(STM32F10X_MD_VL) || defined(STM32F10X_MD) || defined(STM32F10X_LD)
+#if defined(STM32F10X_MD_VL) || defined(STM32F10X_MD) || defined(STM32F10X_LD) || defined(STM32F10X_LD_VL)
 #include <public_f1.h>
 #elif defined(STM32L1XX_MD)
 #include <public_l1.h>
