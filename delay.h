@@ -22,13 +22,19 @@
 #	error DELAY_TIMER_APBEN must be defined
 #endif
 
-static inline void _delay_init ()
+static inline void _delay_init()
 {
 	RCC->DELAY_TIMER_APB |= DELAY_TIMER_APBEN;
 }
 
-void _delay_100us (uint16_t d);
-void _delay_ms (uint16_t d);
-void _delay_us (uint16_t d);
+#ifdef __cplusplus
+extern "C" {
+#endif
+void _delay_100us(uint16_t d);
+void _delay_ms(uint16_t d);
+void _delay_us(uint16_t d);
+#ifdef __cplusplus
+}
+#endif
 
 #endif
