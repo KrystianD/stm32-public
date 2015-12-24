@@ -126,6 +126,9 @@ static int printi(char **out, int i, int b, int sg, int width, int pad, int letb
 static int printff(char **out, double val, int width, int pad)
 {
 	register int pc = 0;
+
+	if (width > 9)
+		width = 9;
 	
 	if (val < 0)
 	{
@@ -149,16 +152,15 @@ static int printff(char **out, double val, int width, int pad)
 			mult *= 10;
 		multSize = width;
 	}
-	mult *= 10;
 	
 	int32_t d = val;
-	int32_t f = (int32_t)((val - d) * mult);
+	int32_t f = (int32_t)((val - d) * mult * 10);
 	
 	if (f % 10 >= 5)
 	{
 		f = f / 10;
 		f += 1;
-		if (f == mult / 10)
+		if (f == mult)
 		{
 			f = 0;
 			d += 1;
