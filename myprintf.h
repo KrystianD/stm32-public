@@ -10,6 +10,7 @@ extern void myputchar(int c);
 int myprintf(const char *format, ...);
 int myvprintf(const char *format, va_list args);
 int mysprintf(char *out, const char *format, ...);
+int myvsprintf(char *out, const char *format, va_list args);
 void printfloat(float val);
 #ifdef __cplusplus
 }

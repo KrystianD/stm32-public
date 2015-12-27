@@ -274,7 +274,10 @@ int myvprintf(const char *format, va_list args)
 int mysprintf(char *out, const char *format, ...)
 {
 	va_list args;
-	
 	va_start(args, format);
+	return print(&out, format, args);
+}
+int myvsprintf(char *out, const char *format, va_list args)
+{
 	return print(&out, format, args);
 }
