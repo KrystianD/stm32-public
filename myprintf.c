@@ -39,7 +39,7 @@ static void printchar(char **str, int c)
 static int prints(char **out, const char *string, int width, int pad)
 {
 	register int pc = 0, padchar = ' ';
-	
+
 	if (width > 0)
 	{
 		register int len = 0;
@@ -67,7 +67,7 @@ static int prints(char **out, const char *string, int width, int pad)
 		printchar(out, padchar);
 		++pc;
 	}
-	
+
 	return pc;
 }
 
@@ -80,23 +80,23 @@ static int printi(char **out, int i, int b, int sg, int width, int pad, int letb
 	register char *s;
 	register int t, neg = 0, pc = 0;
 	register unsigned int u = i;
-	
+
 	if (i == 0)
 	{
 		print_buf[0] = '0';
 		print_buf[1] = '\0';
 		return prints(out, print_buf, width, pad);
 	}
-	
+
 	if (sg && b == 10 && i < 0)
 	{
 		neg = 1;
 		u = -i;
 	}
-	
+
 	s = print_buf + PRINT_BUF_LEN - 1;
 	*s = '\0';
-	
+
 	while (u)
 	{
 		t = u % b;
@@ -105,7 +105,7 @@ static int printi(char **out, int i, int b, int sg, int width, int pad, int letb
 		*--s = t + '0';
 		u /= b;
 	}
-	
+
 	if (neg)
 	{
 		if (width && (pad & PAD_ZERO))
@@ -119,17 +119,18 @@ static int printi(char **out, int i, int b, int sg, int width, int pad, int letb
 			*--s = '-';
 		}
 	}
-	
+
 	return pc + prints(out, s, width, pad);
 }
 
+#ifndef MYPRINTF_DISABLE_FLOAT
 static int printff(char **out, double val, int width, int pad)
 {
 	register int pc = 0;
 
 	if (width > 9)
 		width = 9;
-	
+
 	if (val < 0)
 	{
 		printchar(out, '-');
@@ -141,7 +142,7 @@ static int printff(char **out, double val, int width, int pad)
 		printchar(out, ' ');
 		pc++;
 	}
-	
+
 	int mult = 1000000;
 	int multSize = 6;
 	if (width)
@@ -152,10 +153,10 @@ static int printff(char **out, double val, int width, int pad)
 			mult *= 10;
 		multSize = width;
 	}
-	
+
 	int32_t d = val;
 	int32_t f = (int32_t)((val - d) * mult * 10);
-	
+
 	if (f % 10 >= 5)
 	{
 		f = f / 10;
@@ -170,21 +171,22 @@ static int printff(char **out, double val, int width, int pad)
 	{
 		f = f / 10;
 	}
-	
+
 	pc = printi(out, d, 10, 0, 0, 0, 'a');
 	printchar(out, '.');
 	pc++;
 	pc += printi(out, f, 10, 0, multSize, PAD_ZERO, 'a');
-	
+
 	return pc;
 }
+#endif
 
 static int print(char **out, const char *format, va_list args)
 {
 	register int width, pad;
 	register int pc = 0;
 	char scr[2];
-	
+
 	for (; *format != 0; ++format)
 	{
 		if (*format == '%')
@@ -234,11 +236,13 @@ static int print(char **out, const char *format, va_list args)
 				pc += printi(out, va_arg(args, int), 10, 0, width, pad, 'a');
 				continue;
 			}
+#ifndef MYPRINTF_DISABLE_FLOAT
 			if (*format == 'f')
 			{
 				pc += printff(out, va_arg(args, double), width, pad);
 				continue;
 			}
+#endif
 			if (*format == 'c')
 			{
 				/* char are converted to int then pushed on the stack */
@@ -260,10 +264,18 @@ out:
 	return pc;
 }
 
+int puts(const char *str)
+{
+	while (*str)
+	{
+		myputchar(*str++);
+	}
+	return 1;
+}
 int myprintf(const char *format, ...)
 {
 	va_list args;
-	
+
 	va_start(args, format);
 	return print(0, format, args);
 }
@@ -280,4 +292,36 @@ int mysprintf(char *out, const char *format, ...)
 int myvsprintf(char *out, const char *format, va_list args)
 {
 	return print(&out, format, args);
+}
+
+int printf(const char* format, ...)
+{
+	va_list arg;
+	va_start(arg, format);
+	return myvprintf(format, arg);
+}
+int vprintf(const char* format, va_list arg)
+{
+	return myvprintf(format, arg);
+}
+int sprintf(char* buf, const char* format, ...)
+{
+	va_list arg;
+	va_start(arg, format);
+	return myvsprintf(buf, format, arg);
+}
+int vsprintf(char* buf, const char* format, va_list arg)
+{
+	return myvsprintf(buf, format, arg);
+}
+int snprintf(char* buf, int len, const char* format, ...)
+{
+	// va_list arg;
+	// va_start(arg, format);
+	// return vsnprintf(buf, len, format, arg);
+	return -1;
+}
+int vsnprintf(char* buf, int len, const char* format, va_list arg)
+{
+	return -1;
 }
